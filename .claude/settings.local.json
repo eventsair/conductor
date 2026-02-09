@@ -1,0 +1,40 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:docs.augmentcode.com)",
+      "Bash(chmod:*)",
+      "Bash(./build.sh:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfeat: add multi-platform build system for Gemini, Claude Code, and Augment\n\nExtract canonical platform-agnostic prompts from TOML files into src/prompts/\nwith placeholder tokens \\(__USER_ARGS__, __TEMPLATE_PATH__, __EDITOR_HINT__,\n__IGNORE_FILE__\\). Add build.sh that generates platform-specific outputs in\ndist/ for Gemini CLI, Claude Code plugin, and Augment Code commands.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git remote set-url:*)",
+      "Bash(git push:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git rm:*)",
+      "Bash(git mv:*)",
+      "Bash(/Users/m.khalili/Code/conductor/build.sh:*)",
+      "Bash(claude plugin install --help:*)",
+      "Bash(claude plugin:*)",
+      "Bash(find:*)",
+      "Bash(claude:*)",
+      "Bash(echo:*)",
+      "Bash(test:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(ls:*)",
+      "Bash(pwd:*)",
+      "Bash(rm:*)",
+      "Bash(chmod:*)",
+      "Bash(mkdir:*)",
+      "Bash(cat:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Bash(stat:*)",
+      "Bash(file:*)",
+      "Bash(ln:*)",
+      "Bash(cd:*)",
+      "Bash(grep:*)"
+    ]
+  }
+}

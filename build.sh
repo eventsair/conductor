@@ -114,7 +114,6 @@ wrap_skill_md() {
 ---
 name: $name
 description: $description
-disable-model-invocation: true
 allowed-tools: Bash, Read, Write, Edit, Grep, Glob
 ---
 

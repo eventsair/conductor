@@ -40,7 +40,7 @@ The `--auto-update` flag is optional: if specified, it will update to new versio
 
 ### Claude Code
 
-1. Build the Claude Code plugin:
+1. Clone and build:
    ```bash
    git clone https://github.com/eventsair/conductor.git
    cd conductor
@@ -48,9 +48,11 @@ The `--auto-update` flag is optional: if specified, it will update to new versio
    ```
 2. Install the plugin:
    ```bash
-   cp -r ./dist/claude ~/.claude/plugins/conductor
+   ./install-claude.sh
    ```
 3. Restart Claude Code to load the plugin.
+
+> **Note:** The install script registers a local marketplace and installs the plugin via `claude plugin install`. Simply copying files to `~/.claude/plugins/` is not sufficient — plugins must be registered through the marketplace system to be loaded by Claude Code.
 
 ### Augment Code
 
@@ -177,6 +179,7 @@ conductor/
 │   ├── claude/
 │   └── augment/
 ├── build.sh              # Generates dist/ for all platforms
+├── install-claude.sh     # Registers and installs the Claude Code plugin
 └── dist/                 # Generated platform-specific packages (gitignored)
     ├── gemini/
     ├── claude/
