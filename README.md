@@ -48,8 +48,9 @@ The `--auto-update` flag is optional: if specified, it will update to new versio
    ```
 2. Install the plugin:
    ```bash
-   claude plugin install ./dist/claude
+   cp -r ./dist/claude ~/.claude/plugins/conductor
    ```
+3. Restart Claude Code to load the plugin.
 
 ### Augment Code
 
