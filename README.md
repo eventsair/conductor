@@ -13,8 +13,8 @@ The philosophy behind Conductor is simple: control your code. By treating contex
 | Platform | Status | Command Style |
 | :--- | :--- | :--- |
 | **Gemini CLI** | Supported | `/conductor:setup`, `/conductor:newTrack` |
-| **Claude Code** | Supported | `/conductor:setup`, `/conductor:new-track` |
-| **Augment Code** | Supported | `/conductor:setup`, `/conductor:new-track` |
+| **Claude Code** | Supported | `/conductor:setup`, `/conductor:newTrack` |
+| **Augment Code** | Supported | `/conductor:setup`, `/conductor:newTrack` |
 
 All three platforms share the same core protocols and prompts — only the thin format wrapper differs. A single `build.sh` script generates platform-specific packages from canonical source files.
 
@@ -111,8 +111,8 @@ When you're ready to take on a new feature or bug fix, start a new track. This i
 /conductor:newTrack "Add a dark mode toggle to the settings page"
 
 # Claude Code / Augment Code
-/conductor:new-track
-/conductor:new-track "Add a dark mode toggle to the settings page"
+/conductor:newTrack
+/conductor:newTrack "Add a dark mode toggle to the settings page"
 ```
 
 ### 3. Implement the Track
@@ -154,7 +154,7 @@ During implementation, you can also:
 | Command | Description | Artifacts |
 | :--- | :--- | :--- |
 | `setup` | Scaffolds the project and sets up the Conductor environment. Run this once per project. | `conductor/product.md`<br>`conductor/product-guidelines.md`<br>`conductor/tech-stack.md`<br>`conductor/workflow.md`<br>`conductor/tracks.md` |
-| `new-track` / `newTrack` | Starts a new feature or bug track. Generates `spec.md` and `plan.md`. | `conductor/tracks/<id>/spec.md`<br>`conductor/tracks/<id>/plan.md`<br>`conductor/tracks.md` |
+| `newTrack` | Starts a new feature or bug track. Generates `spec.md` and `plan.md`. | `conductor/tracks/<id>/spec.md`<br>`conductor/tracks/<id>/plan.md`<br>`conductor/tracks.md` |
 | `implement` | Executes the tasks defined in the current track's plan. | `conductor/tracks.md`<br>`conductor/tracks/<id>/plan.md` |
 | `status` | Displays the current progress of the tracks file and active tracks. | Reads `conductor/tracks.md` |
 | `revert` | Reverts a track, phase, or task by analyzing git history. | Reverts git history |

@@ -1,36 +1,25 @@
 {
   "setup": {
-    "source_file": "setup.md",
-    "gemini_name": "setup",
     "description": "Scaffolds the project and sets up the Conductor environment",
     "argument_hint": "[optional: project description]"
   },
-  "new-track": {
-    "source_file": "new-track.md",
-    "gemini_name": "newTrack",
+  "newTrack": {
+    "source_file": "newTrack.md",
     "description": "Plans a track, generates spec documents and updates the tracks file",
     "argument_hint": "[description of feature or bug]"
   },
   "implement": {
-    "source_file": "implement.md",
-    "gemini_name": "implement",
     "description": "Executes the tasks defined in the specified track's plan",
     "argument_hint": "[optional: track name]"
   },
   "review": {
-    "source_file": "review.md",
-    "gemini_name": "review",
     "description": "Reviews the completed track work against guidelines and the plan",
     "argument_hint": "[track name or 'current']"
   },
   "status": {
-    "source_file": "status.md",
-    "gemini_name": "status",
     "description": "Displays the current progress of the project"
   },
   "revert": {
-    "source_file": "revert.md",
-    "gemini_name": "revert",
     "description": "Reverts previous work",
     "argument_hint": "[optional: track/phase/task target]"
   }

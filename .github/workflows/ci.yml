@@ -63,7 +63,7 @@ jobs:
 
       - name: Verify Claude/Augment commands use $ARGUMENTS
         run: |
-          for f in dist/claude/skills/new-track/SKILL.md dist/claude/skills/review/SKILL.md; do
+          for f in dist/claude/skills/newTrack/SKILL.md dist/claude/skills/review/SKILL.md; do
             if [ -f "$f" ] && grep -q '{{args}}' "$f"; then
               echo "ERROR: $f contains {{args}} instead of \$ARGUMENTS"
               exit 1

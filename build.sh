@@ -194,16 +194,11 @@ for cmd in data:
 ")
 
     for cmd in $commands; do
-        local source_file gemini_name description
+        local source_file description
 
         source_file=$(json_field "$cmd" "source_file")
         if [ -z "$source_file" ]; then
             source_file="${cmd}.md"
-        fi
-
-        gemini_name=$(json_field "$cmd" "gemini_name")
-        if [ -z "$gemini_name" ]; then
-            gemini_name="$cmd"
         fi
 
         description=$(json_field "$cmd" "description")
@@ -219,7 +214,7 @@ for cmd in data:
 
         case "$platform" in
             gemini)
-                local output_path="$DIST_DIR/gemini/commands/conductor/${gemini_name}.toml"
+                local output_path="$DIST_DIR/gemini/commands/conductor/${cmd}.toml"
                 mkdir -p "$(dirname "$output_path")"
                 wrap_toml "$description" "$prompt_content" > "$output_path"
                 ;;
