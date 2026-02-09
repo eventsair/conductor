@@ -1,12 +1,22 @@
-# Conductor Extension for Gemini CLI
+# Conductor
 
 **Measure twice, code once.**
 
-Conductor is a Gemini CLI extension that enables **Context-Driven Development**. It turns the Gemini CLI into a proactive project manager that follows a strict protocol to specify, plan, and implement software features and bug fixes.
+Conductor is a **cross-platform AI development framework** that enables **Context-Driven Development**. It turns AI coding assistants into proactive project managers that follow a strict protocol to specify, plan, and implement software features and bug fixes.
 
 Instead of just writing code, Conductor ensures a consistent, high-quality lifecycle for every task: **Context -> Spec & Plan -> Implement**.
 
 The philosophy behind Conductor is simple: control your code. By treating context as a managed artifact alongside your code, you transform your repository into a single source of truth that drives every agent interaction with deep, persistent project awareness.
+
+## Supported Platforms
+
+| Platform | Status | Command Style |
+| :--- | :--- | :--- |
+| **Gemini CLI** | Supported | `/conductor:setup`, `/conductor:newTrack` |
+| **Claude Code** | Supported | `/conductor:setup`, `/conductor:new-track` |
+| **Augment Code** | Supported | `/conductor:setup`, `/conductor:new-track` |
+
+All three platforms share the same core protocols and prompts — only the thin format wrapper differs. A single `build.sh` script generates platform-specific packages from canonical source files.
 
 ## Features
 
@@ -16,22 +26,51 @@ The philosophy behind Conductor is simple: control your code. By treating contex
 - **Work as a team**: Set project-level context for your product, tech stack, and workflow preferences that become a shared foundation for your team.
 - **Build on existing projects**: Intelligent initialization for both new (Greenfield) and existing (Brownfield) projects.
 - **Smart revert**: A git-aware revert command that understands logical units of work (tracks, phases, tasks) rather than just commit hashes.
+- **Platform agnostic**: One canonical set of prompts powers Gemini CLI, Claude Code, and Augment Code.
 
 ## Installation
 
-Install the Conductor extension by running the following command from your terminal:
+### Gemini CLI
 
 ```bash
-gemini extensions install https://github.com/gemini-cli-extensions/conductor --auto-update
+gemini extensions install https://github.com/eventsair/conductor --auto-update
 ```
 
-The `--auto-update` is optional: if specified, it will update to new versions as they are released.
+The `--auto-update` flag is optional: if specified, it will update to new versions as they are released.
+
+### Claude Code
+
+1. Build the Claude Code plugin:
+   ```bash
+   git clone https://github.com/eventsair/conductor.git
+   cd conductor
+   ./build.sh
+   ```
+2. Install the plugin:
+   ```bash
+   claude plugin install ./dist/claude
+   ```
+
+### Augment Code
+
+1. Build the Augment Code commands:
+   ```bash
+   git clone https://github.com/eventsair/conductor.git
+   cd conductor
+   ./build.sh
+   ```
+2. Copy the output into your project:
+   ```bash
+   cp -r dist/augment/.augment /path/to/your/project/
+   cp dist/augment/CLAUDE.md /path/to/your/project/
+   cp -r dist/augment/templates /path/to/your/project/.augment/
+   ```
 
 ## Usage
 
 Conductor is designed to manage the entire lifecycle of your development tasks.
 
-**Note on Token Consumption:** Conductor's context-driven approach involves reading and analyzing your project's context, specifications, and plans. This can lead to increased token consumption, especially in larger projects or during extensive planning and implementation phases. You can check the token consumption in the current session by running `/stats model`.
+**Note on Token Consumption:** Conductor's context-driven approach involves reading and analyzing your project's context, specifications, and plans. This can lead to increased token consumption, especially in larger projects or during extensive planning and implementation phases.
 
 ### 1. Set Up the Project (Run Once)
 
@@ -56,7 +95,7 @@ When you run `/conductor:setup`, Conductor helps you define the core components 
 
 ### 2. Start a New Track (Feature or Bug)
 
-When you’re ready to take on a new feature or bug fix, run `/conductor:newTrack`. This initializes a **track** — a high-level unit of work. Conductor helps you generate two critical artifacts:
+When you're ready to take on a new feature or bug fix, start a new track. This initializes a **track** — a high-level unit of work. Conductor helps you generate two critical artifacts:
 
 - **Specs**: The detailed requirements for the specific job. What are we building and why?
 - **Plan**: An actionable to-do list containing phases, tasks, and sub-tasks.
@@ -67,14 +106,18 @@ When you’re ready to take on a new feature or bug fix, run `/conductor:newTrac
 - `conductor/tracks/<track_id>/metadata.json`
 
 ```bash
+# Gemini CLI
 /conductor:newTrack
-# OR with a description
 /conductor:newTrack "Add a dark mode toggle to the settings page"
+
+# Claude Code / Augment Code
+/conductor:new-track
+/conductor:new-track "Add a dark mode toggle to the settings page"
 ```
 
 ### 3. Implement the Track
 
-Once you approve the plan, run `/conductor:implement`. Your coding agent then works through the `plan.md` file, checking off tasks as it completes them.
+Once you approve the plan, run the implement command. Your coding agent then works through the `plan.md` file, checking off tasks as it completes them.
 
 **Updated Artifacts:**
 - `conductor/tracks.md` (Status updates)
@@ -101,7 +144,6 @@ During implementation, you can also:
   ```bash
   /conductor:revert
   ```
-
 - **Review work**: Review completed work against guidelines and the plan.
   ```bash
   /conductor:review
@@ -111,17 +153,52 @@ During implementation, you can also:
 
 | Command | Description | Artifacts |
 | :--- | :--- | :--- |
-| `/conductor:setup` | Scaffolds the project and sets up the Conductor environment. Run this once per project. | `conductor/product.md`<br>`conductor/product-guidelines.md`<br>`conductor/tech-stack.md`<br>`conductor/workflow.md`<br>`conductor/tracks.md` |
-| `/conductor:newTrack` | Starts a new feature or bug track. Generates `spec.md` and `plan.md`. | `conductor/tracks/<id>/spec.md`<br>`conductor/tracks/<id>/plan.md`<br>`conductor/tracks.md` |
-| `/conductor:implement` | Executes the tasks defined in the current track's plan. | `conductor/tracks.md`<br>`conductor/tracks/<id>/plan.md` |
-| `/conductor:status` | Displays the current progress of the tracks file and active tracks. | Reads `conductor/tracks.md` |
-| `/conductor:revert` | Reverts a track, phase, or task by analyzing git history. | Reverts git history |
-| `/conductor:review` | Reviews completed work against guidelines and the plan. | Reads `plan.md`, `product-guidelines.md` |
+| `setup` | Scaffolds the project and sets up the Conductor environment. Run this once per project. | `conductor/product.md`<br>`conductor/product-guidelines.md`<br>`conductor/tech-stack.md`<br>`conductor/workflow.md`<br>`conductor/tracks.md` |
+| `new-track` / `newTrack` | Starts a new feature or bug track. Generates `spec.md` and `plan.md`. | `conductor/tracks/<id>/spec.md`<br>`conductor/tracks/<id>/plan.md`<br>`conductor/tracks.md` |
+| `implement` | Executes the tasks defined in the current track's plan. | `conductor/tracks.md`<br>`conductor/tracks/<id>/plan.md` |
+| `status` | Displays the current progress of the tracks file and active tracks. | Reads `conductor/tracks.md` |
+| `revert` | Reverts a track, phase, or task by analyzing git history. | Reverts git history |
+| `review` | Reviews completed work against guidelines and the plan. | Reads `plan.md`, `product-guidelines.md` |
+
+## Project Architecture
+
+Conductor uses a monorepo with a build step to support multiple platforms from a single canonical source:
+
+```
+conductor/
+├── src/
+│   ├── prompts/          # Canonical platform-agnostic prompt files
+│   ├── context/          # Universal File Resolution Protocol
+│   └── metadata/         # Command descriptions and platform mappings
+├── templates/            # Shared workflow and code style guide templates
+├── platforms/            # Platform-specific manifests
+│   ├── gemini/
+│   ├── claude/
+│   └── augment/
+├── build.sh              # Generates dist/ for all platforms
+└── dist/                 # Generated platform-specific packages (gitignored)
+    ├── gemini/
+    ├── claude/
+    └── augment/
+```
+
+### Building from Source
+
+```bash
+./build.sh
+```
+
+This generates platform-ready packages in `dist/` by:
+1. Reading canonical prompts from `src/prompts/`
+2. Replacing platform-agnostic placeholders with platform-specific values
+3. Wrapping content in the correct format (TOML for Gemini, SKILL.md for Claude, .md for Augment)
+4. Copying templates and manifests
 
 ## Resources
 
 - [Gemini CLI extensions](https://geminicli.com/docs/extensions/): Documentation about using extensions in Gemini CLI
-- [GitHub issues](https://github.com/gemini-cli-extensions/conductor/issues): Report bugs or request features
+- [Claude Code plugins](https://docs.anthropic.com/en/docs/claude-code): Documentation about Claude Code
+- [GitHub issues](https://github.com/eventsair/conductor/issues): Report bugs or request features
 
 ## Legal
 
