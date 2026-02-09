@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Run build
+        run: ./build.sh
+
+      - name: Verify build outputs exist
+        run: |
+          # Gemini
+          test -f dist/gemini/gemini-extension.json
+          test -f dist/gemini/GEMINI.md
+          test -d dist/gemini/commands/conductor
+          test -d dist/gemini/templates
+
+          # Claude Code
+          test -f dist/claude/.claude-plugin/plugin.json
+          test -f dist/claude/CLAUDE.md
+          test -d dist/claude/skills
+          test -d dist/claude/templates
+
+          # Augment Code
+          test -f dist/augment/CLAUDE.md
+          test -d dist/augment/.augment/commands/conductor
+          test -d dist/augment/templates
+
+      - name: Verify build is reproducible
+        run: |
+          cp -r dist dist-first
+          ./build.sh
+          diff -r dist-first dist
+
+      - name: Verify no unreplaced placeholders
+        run: |
+          if grep -r '__USER_ARGS__\|__TEMPLATE_PATH__\|__EDITOR_HINT__\|__IGNORE_FILE__' dist/; then
+            echo "ERROR: Found unreplaced placeholders in dist/"
+            exit 1
+          fi
+
+      - name: Verify Gemini commands use {{args}}
+        run: |
+          for f in dist/gemini/commands/conductor/newTrack.toml dist/gemini/commands/conductor/review.toml; do
+            if [ -f "$f" ] && grep -q 'ARGUMENTS' "$f"; then
+              echo "ERROR: $f contains \$ARGUMENTS instead of {{args}}"
+              exit 1
+            fi
+          done
+
+      - name: Verify Claude/Augment commands use $ARGUMENTS
+        run: |
+          for f in dist/claude/skills/new-track/SKILL.md dist/claude/skills/review/SKILL.md; do
+            if [ -f "$f" ] && grep -q '{{args}}' "$f"; then
+              echo "ERROR: $f contains {{args}} instead of \$ARGUMENTS"
+              exit 1
+            fi
+          done

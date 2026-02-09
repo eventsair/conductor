@@ -24,24 +24,31 @@ jobs:
         if: ${{ steps.release.outputs.release_created }}
         uses: actions/checkout@v4
 
-      - name: Create TAR archive
+      - name: Set up Python
+        if: ${{ steps.release.outputs.release_created }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Build all platforms
+        if: ${{ steps.release.outputs.release_created }}
+        run: ./build.sh
+
+      - name: Create platform archives
         if: ${{ steps.release.outputs.release_created }}
         run: |
-          tar -czvf ../conductor-release.tar.gz \
-            --exclude='.git' \
-            --exclude='.github' \
-            --exclude='release-please-config.json' \
-            --exclude='.release-please-manifest.json' \
-            --exclude='.gitignore' \
-            --exclude='CONTRIBUTING.md' \
-            .
-          mv ../conductor-release.tar.gz .
+          cd dist
+          tar -czvf ../conductor-gemini.tar.gz -C gemini .
+          tar -czvf ../conductor-claude.tar.gz -C claude .
+          tar -czvf ../conductor-augment.tar.gz -C augment .
 
-      - name: Upload archive to GitHub Release
+      - name: Upload archives to GitHub Release
         if: ${{ steps.release.outputs.release_created }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release upload \
             ${{ steps.release.outputs.tag_name }} \
-            conductor-release.tar.gz
+            conductor-gemini.tar.gz \
+            conductor-claude.tar.gz \
+            conductor-augment.tar.gz
