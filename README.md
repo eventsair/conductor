@@ -27,7 +27,7 @@ All platforms share the same core protocols and prompts — only the thin format
 - **Work as a team**: Set project-level context for your product, tech stack, and workflow preferences that become a shared foundation for your team.
 - **Build on existing projects**: Intelligent initialization for both new (Greenfield) and existing (Brownfield) projects.
 - **Smart revert**: A git-aware revert command that understands logical units of work (tracks, phases, tasks) rather than just commit hashes.
-- **Platform agnostic**: One canonical set of prompts powers Gemini CLI, Claude Code, and Augment Code.
+- **Platform agnostic**: One canonical set of prompts powers Gemini CLI, Claude Code, Augment Code, and GitHub Copilot.
 
 ## Installation
 
