@@ -78,7 +78,11 @@ The `--auto-update` flag is optional: if specified, it will update to new versio
    cd conductor
    ./build.sh
    ```
-2. Copy the Agent Skills into your project:
+2. Install into your project:
+   ```bash
+   ./install-copilot.sh /path/to/your/project
+   ```
+   Or manually copy the files:
    ```bash
    cp -r dist/copilot/.github /path/to/your/project/
    cp dist/copilot/COPILOT.md /path/to/your/project/
