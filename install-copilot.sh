@@ -34,8 +34,13 @@ mkdir -p "$TARGET_DIR/.github"
 # Copy or update skills
 if [ -d "$TARGET_DIR/.github/skills" ]; then
     echo "Updating existing skills..."
-    # Remove old conductor skills
-    rm -rf "$TARGET_DIR/.github/skills/"{setup,newTrack,implement,review,status,revert}
+    # Remove old conductor skills by iterating through the skills we're about to install
+    for skill_dir in "$DIST_COPILOT/.github/skills/"*; do
+        skill_name=$(basename "$skill_dir")
+        if [ -d "$TARGET_DIR/.github/skills/$skill_name" ]; then
+            rm -rf "$TARGET_DIR/.github/skills/$skill_name"
+        fi
+    done
 else
     echo "Creating skills directory..."
     mkdir -p "$TARGET_DIR/.github/skills"

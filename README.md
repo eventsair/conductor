@@ -90,7 +90,7 @@ The `--auto-update` flag is optional: if specified, it will update to new versio
    ```
 3. The skills will be automatically detected by GitHub Copilot in VS Code when you use Copilot Chat or Agent Mode.
 
-> **Note:** GitHub Copilot Agent Skills are stored in `.github/skills` and work with VS Code, Copilot CLI, and other Copilot-enabled environments. Once installed, you can invoke Conductor commands naturally through Copilot Chat (e.g., "setup the conductor project" or "create a new track for user authentication").
+> **Note:** GitHub Copilot Agent Skills are stored in `.github/skills` and work with GitHub Copilot in VS Code and other Agent Skills-compatible environments. Once installed, you can invoke Conductor commands naturally through Copilot Chat (e.g., "setup the conductor project" or "create a new track for user authentication").
 
 ## Usage
 
