@@ -15,8 +15,9 @@ The philosophy behind Conductor is simple: control your code. By treating contex
 | **Gemini CLI** | Supported | `/conductor:setup`, `/conductor:newTrack` |
 | **Claude Code** | Supported | `/conductor:setup`, `/conductor:newTrack` |
 | **Augment Code** | Supported | `/conductor:setup`, `/conductor:newTrack` |
+| **GitHub Copilot** | Supported | Agent Skills in `.github/skills` |
 
-All three platforms share the same core protocols and prompts — only the thin format wrapper differs. A single `build.sh` script generates platform-specific packages from canonical source files.
+All platforms share the same core protocols and prompts — only the thin format wrapper differs. A single `build.sh` script generates platform-specific packages from canonical source files.
 
 ## Features
 
@@ -26,7 +27,7 @@ All three platforms share the same core protocols and prompts — only the thin 
 - **Work as a team**: Set project-level context for your product, tech stack, and workflow preferences that become a shared foundation for your team.
 - **Build on existing projects**: Intelligent initialization for both new (Greenfield) and existing (Brownfield) projects.
 - **Smart revert**: A git-aware revert command that understands logical units of work (tracks, phases, tasks) rather than just commit hashes.
-- **Platform agnostic**: One canonical set of prompts powers Gemini CLI, Claude Code, and Augment Code.
+- **Platform agnostic**: One canonical set of prompts powers Gemini CLI, Claude Code, Augment Code, and GitHub Copilot.
 
 ## Installation
 
@@ -69,6 +70,28 @@ The `--auto-update` flag is optional: if specified, it will update to new versio
    cp -r dist/augment/templates /path/to/your/project/.augment/
    ```
 
+### GitHub Copilot
+
+1. Build the Copilot Agent Skills:
+   ```bash
+   git clone https://github.com/eventsair/conductor.git
+   cd conductor
+   ./build.sh
+   ```
+2. Install into your project:
+   ```bash
+   ./install-copilot.sh /path/to/your/project
+   ```
+   Or manually copy the files:
+   ```bash
+   cp -r dist/copilot/.github /path/to/your/project/
+   cp dist/copilot/COPILOT.md /path/to/your/project/
+   cp -r dist/copilot/templates /path/to/your/project/
+   ```
+3. The skills will be automatically detected by GitHub Copilot in VS Code when you use Copilot Chat or Agent Mode.
+
+> **Note:** GitHub Copilot Agent Skills are stored in `.github/skills` and work with GitHub Copilot in VS Code and other Agent Skills-compatible environments. Once installed, you can invoke Conductor commands naturally through Copilot Chat (e.g., "setup the conductor project" or "create a new track for user authentication").
+
 ## Usage
 
 Conductor is designed to manage the entire lifecycle of your development tasks.
@@ -93,7 +116,11 @@ When you run `/conductor:setup`, Conductor helps you define the core components 
 - `conductor/tracks.md`
 
 ```bash
+# Gemini CLI / Claude Code / Augment Code
 /conductor:setup
+
+# GitHub Copilot (in Chat)
+"Set up the conductor project"
 ```
 
 ### 2. Start a New Track (Feature or Bug)
@@ -116,6 +143,9 @@ When you're ready to take on a new feature or bug fix, start a new track. This i
 # Claude Code / Augment Code
 /conductor:newTrack
 /conductor:newTrack "Add a dark mode toggle to the settings page"
+
+# GitHub Copilot (in Chat)
+"Create a new track for adding a dark mode toggle to the settings page"
 ```
 
 ### 3. Implement the Track
@@ -128,7 +158,11 @@ Once you approve the plan, run the implement command. Your coding agent then wor
 - Project context files (Synchronized on completion)
 
 ```bash
+# Gemini CLI / Claude Code / Augment Code
 /conductor:implement
+
+# GitHub Copilot (in Chat)
+"Implement the current track"
 ```
 
 Conductor will:
@@ -141,15 +175,27 @@ During implementation, you can also:
 
 - **Check status**: Get a high-level overview of your project's progress.
   ```bash
+  # Gemini CLI / Claude Code / Augment Code
   /conductor:status
+  
+  # GitHub Copilot (in Chat)
+  "Show conductor project status"
   ```
 - **Revert work**: Undo a feature or a specific task if needed.
   ```bash
+  # Gemini CLI / Claude Code / Augment Code
   /conductor:revert
+  
+  # GitHub Copilot (in Chat)
+  "Revert the latest conductor changes"
   ```
 - **Review work**: Review completed work against guidelines and the plan.
   ```bash
+  # Gemini CLI / Claude Code / Augment Code
   /conductor:review
+  
+  # GitHub Copilot (in Chat)
+  "Review the current track work"
   ```
 
 ## Commands Reference
@@ -180,10 +226,12 @@ conductor/
 │   └── augment/
 ├── build.sh              # Generates dist/ for all platforms
 ├── install-claude.sh     # Registers and installs the Claude Code plugin
+├── install-copilot.sh    # Installs Copilot Agent Skills into a project
 └── dist/                 # Generated platform-specific packages (gitignored)
     ├── gemini/
     ├── claude/
-    └── augment/
+    ├── augment/
+    └── copilot/
 ```
 
 ### Building from Source
@@ -195,13 +243,14 @@ conductor/
 This generates platform-ready packages in `dist/` by:
 1. Reading canonical prompts from `src/prompts/`
 2. Replacing platform-agnostic placeholders with platform-specific values
-3. Wrapping content in the correct format (TOML for Gemini, SKILL.md for Claude, .md for Augment)
+3. Wrapping content in the correct format (TOML for Gemini, SKILL.md for Claude/Copilot, .md for Augment)
 4. Copying templates and manifests
 
 ## Resources
 
 - [Gemini CLI extensions](https://geminicli.com/docs/extensions/): Documentation about using extensions in Gemini CLI
 - [Claude Code plugins](https://docs.anthropic.com/en/docs/claude-code): Documentation about Claude Code
+- [GitHub Copilot Agent Skills](https://code.visualstudio.com/docs/copilot/customization/agent-skills): Documentation about using Agent Skills with GitHub Copilot
 - [GitHub issues](https://github.com/eventsair/conductor/issues): Report bugs or request features
 
 ## Legal
