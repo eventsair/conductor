@@ -4,7 +4,7 @@ set -euo pipefail
 # ============================================================================
 # Conductor Build Script
 # Generates platform-specific packages from canonical source files.
-# Output: dist/gemini/, dist/claude/, dist/augment/
+# Output: dist/gemini/, dist/claude/, dist/augment/, dist/copilot/
 # ============================================================================
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -53,6 +53,12 @@ AUGMENT_TEMPLATE_PATH_MARKER='__AUGMENT_TEMPLATE_PATH_DYNAMIC__'
 AUGMENT_EDITOR_HINT='your preferred text editor'
 AUGMENT_IGNORE_FILE='.gitignore'
 
+# GitHub Copilot
+COPILOT_USER_ARGS='$ARGUMENTS'
+COPILOT_TEMPLATE_PATH_MARKER='__COPILOT_TEMPLATE_PATH_DYNAMIC__'
+COPILOT_EDITOR_HINT='your preferred text editor'
+COPILOT_IGNORE_FILE='.gitignore'
+
 # ============================================================================
 # replace_placeholders <content> <platform>
 # Replaces __PLACEHOLDER__ tokens with platform-specific values.
@@ -83,6 +89,13 @@ replace_placeholders() {
             content="${content//__IGNORE_FILE__/$AUGMENT_IGNORE_FILE}"
             # Augment uses dynamic template path resolution
             content="${content//__TEMPLATE_PATH__/$AUGMENT_TEMPLATE_PATH_MARKER}"
+            ;;
+        copilot)
+            content="${content//__USER_ARGS__/$COPILOT_USER_ARGS}"
+            content="${content//__EDITOR_HINT__/$COPILOT_EDITOR_HINT}"
+            content="${content//__IGNORE_FILE__/$COPILOT_IGNORE_FILE}"
+            # Copilot uses dynamic template path resolution
+            content="${content//__TEMPLATE_PATH__/$COPILOT_TEMPLATE_PATH_MARKER}"
             ;;
     esac
 
@@ -167,6 +180,18 @@ inject_augment_template_resolution() {
 }
 
 # ============================================================================
+# inject_copilot_template_resolution <content>
+# Replaces the Copilot template path marker with dynamic find-based resolution.
+# ============================================================================
+inject_copilot_template_resolution() {
+    local content="$1"
+    local dynamic_block
+    dynamic_block='$(find ~ -path "*/conductor/templates/workflow.md" -not -path "*/.git/*" 2>/dev/null | head -1 | xargs dirname | xargs dirname)/templates'
+    content="${content//$COPILOT_TEMPLATE_PATH_MARKER/$dynamic_block}"
+    printf '%s' "$content"
+}
+
+# ============================================================================
 # generate_context_file <platform>
 # Generates the context file (GEMINI.md or CLAUDE.md) from canonical source.
 # ============================================================================
@@ -228,6 +253,12 @@ for cmd in data:
                 local output_path="$DIST_DIR/augment/.augment/commands/conductor/${cmd}.md"
                 mkdir -p "$(dirname "$output_path")"
                 printf '%s' "$prompt_content" | wrap_augment_md "$cmd" "$description" > "$output_path"
+                ;;
+            copilot)
+                prompt_content=$(inject_copilot_template_resolution "$prompt_content")
+                local output_path="$DIST_DIR/copilot/.github/skills/${cmd}/SKILL.md"
+                mkdir -p "$(dirname "$output_path")"
+                printf '%s' "$prompt_content" | wrap_skill_md "$cmd" "$description" > "$output_path"
                 ;;
         esac
 
@@ -298,11 +329,28 @@ main() {
     cp -r "$TEMPLATES_DIR" "$DIST_DIR/augment/templates"
 
     echo ""
+
+    # ------------------------------------------------------------------
+    # Build GitHub Copilot
+    # ------------------------------------------------------------------
+    echo "Building GitHub Copilot..."
+    mkdir -p "$DIST_DIR/copilot"
+
+    build_commands "copilot"
+
+    # Context file (Copilot supports SKILL.md with context)
+    generate_context_file "copilot" "$DIST_DIR/copilot/COPILOT.md"
+
+    # Templates
+    cp -r "$TEMPLATES_DIR" "$DIST_DIR/copilot/templates"
+
+    echo ""
     echo "=== Build Complete ==="
     echo "Output directories:"
     echo "  dist/gemini/   - Gemini CLI extension"
     echo "  dist/claude/   - Claude Code plugin"
     echo "  dist/augment/  - Augment Code commands"
+    echo "  dist/copilot/  - GitHub Copilot Agent Skills"
 }
 
 main "$@"

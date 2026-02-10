@@ -15,8 +15,9 @@ The philosophy behind Conductor is simple: control your code. By treating contex
 | **Gemini CLI** | Supported | `/conductor:setup`, `/conductor:newTrack` |
 | **Claude Code** | Supported | `/conductor:setup`, `/conductor:newTrack` |
 | **Augment Code** | Supported | `/conductor:setup`, `/conductor:newTrack` |
+| **GitHub Copilot** | Supported | Agent Skills in `.github/skills` |
 
-All three platforms share the same core protocols and prompts — only the thin format wrapper differs. A single `build.sh` script generates platform-specific packages from canonical source files.
+All platforms share the same core protocols and prompts — only the thin format wrapper differs. A single `build.sh` script generates platform-specific packages from canonical source files.
 
 ## Features
 
@@ -69,6 +70,24 @@ The `--auto-update` flag is optional: if specified, it will update to new versio
    cp -r dist/augment/templates /path/to/your/project/.augment/
    ```
 
+### GitHub Copilot
+
+1. Build the Copilot Agent Skills:
+   ```bash
+   git clone https://github.com/eventsair/conductor.git
+   cd conductor
+   ./build.sh
+   ```
+2. Copy the Agent Skills into your project:
+   ```bash
+   cp -r dist/copilot/.github /path/to/your/project/
+   cp dist/copilot/COPILOT.md /path/to/your/project/
+   cp -r dist/copilot/templates /path/to/your/project/
+   ```
+3. The skills will be automatically detected by GitHub Copilot in VS Code when you use Copilot Chat or Agent Mode.
+
+> **Note:** GitHub Copilot Agent Skills are stored in `.github/skills` and work with VS Code, Copilot CLI, and other Copilot-enabled environments. Once installed, you can invoke Conductor commands naturally through Copilot Chat (e.g., "setup the conductor project" or "create a new track for user authentication").
+
 ## Usage
 
 Conductor is designed to manage the entire lifecycle of your development tasks.
@@ -93,7 +112,11 @@ When you run `/conductor:setup`, Conductor helps you define the core components 
 - `conductor/tracks.md`
 
 ```bash
+# Gemini CLI / Claude Code / Augment Code
 /conductor:setup
+
+# GitHub Copilot (in Chat)
+"Set up the conductor project"
 ```
 
 ### 2. Start a New Track (Feature or Bug)
@@ -116,6 +139,9 @@ When you're ready to take on a new feature or bug fix, start a new track. This i
 # Claude Code / Augment Code
 /conductor:newTrack
 /conductor:newTrack "Add a dark mode toggle to the settings page"
+
+# GitHub Copilot (in Chat)
+"Create a new track for adding a dark mode toggle to the settings page"
 ```
 
 ### 3. Implement the Track
@@ -128,7 +154,11 @@ Once you approve the plan, run the implement command. Your coding agent then wor
 - Project context files (Synchronized on completion)
 
 ```bash
+# Gemini CLI / Claude Code / Augment Code
 /conductor:implement
+
+# GitHub Copilot (in Chat)
+"Implement the current track"
 ```
 
 Conductor will:
@@ -141,15 +171,27 @@ During implementation, you can also:
 
 - **Check status**: Get a high-level overview of your project's progress.
   ```bash
+  # Gemini CLI / Claude Code / Augment Code
   /conductor:status
+  
+  # GitHub Copilot (in Chat)
+  "Show conductor project status"
   ```
 - **Revert work**: Undo a feature or a specific task if needed.
   ```bash
+  # Gemini CLI / Claude Code / Augment Code
   /conductor:revert
+  
+  # GitHub Copilot (in Chat)
+  "Revert the latest conductor changes"
   ```
 - **Review work**: Review completed work against guidelines and the plan.
   ```bash
+  # Gemini CLI / Claude Code / Augment Code
   /conductor:review
+  
+  # GitHub Copilot (in Chat)
+  "Review the current track work"
   ```
 
 ## Commands Reference
