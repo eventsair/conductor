@@ -226,10 +226,12 @@ conductor/
 │   └── augment/
 ├── build.sh              # Generates dist/ for all platforms
 ├── install-claude.sh     # Registers and installs the Claude Code plugin
+├── install-copilot.sh    # Installs Copilot Agent Skills into a project
 └── dist/                 # Generated platform-specific packages (gitignored)
     ├── gemini/
     ├── claude/
-    └── augment/
+    ├── augment/
+    └── copilot/
 ```
 
 ### Building from Source
@@ -241,13 +243,14 @@ conductor/
 This generates platform-ready packages in `dist/` by:
 1. Reading canonical prompts from `src/prompts/`
 2. Replacing platform-agnostic placeholders with platform-specific values
-3. Wrapping content in the correct format (TOML for Gemini, SKILL.md for Claude, .md for Augment)
+3. Wrapping content in the correct format (TOML for Gemini, SKILL.md for Claude/Copilot, .md for Augment)
 4. Copying templates and manifests
 
 ## Resources
 
 - [Gemini CLI extensions](https://geminicli.com/docs/extensions/): Documentation about using extensions in Gemini CLI
 - [Claude Code plugins](https://docs.anthropic.com/en/docs/claude-code): Documentation about Claude Code
+- [GitHub Copilot Agent Skills](https://code.visualstudio.com/docs/copilot/customization/agent-skills): Documentation about using Agent Skills with GitHub Copilot
 - [GitHub issues](https://github.com/eventsair/conductor/issues): Report bugs or request features
 
 ## Legal
