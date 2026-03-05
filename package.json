@@ -1,0 +1,13 @@
+{
+  "name": "conductor",
+  "version": "0.1.0",
+  "description": "Cross-platform AI development framework",
+  "scripts": {
+    "build": "node build.js",
+    "install-claude": "node install-claude.js",
+    "install-augment": "node install-augment.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
