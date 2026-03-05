@@ -30,7 +30,11 @@ All three platforms share the same core protocols and prompts — only the thin 
 
 ## Installation
 
+> **Prerequisite:** [Node.js 18+](https://nodejs.org) must be installed on your machine.
+
 ### Gemini CLI
+
+The Gemini CLI extension is installed directly — no build step required.
 
 ```bash
 gemini extensions install https://github.com/eventsair/conductor --auto-update
@@ -38,36 +42,64 @@ gemini extensions install https://github.com/eventsair/conductor --auto-update
 
 The `--auto-update` flag is optional: if specified, it will update to new versions as they are released.
 
+---
+
 ### Claude Code
+
+#### Mac / Linux
 
 1. Clone and build:
    ```bash
    git clone https://github.com/eventsair/conductor.git
    cd conductor
-   ./build.sh
+   node build.js
    ```
 2. Install the plugin:
    ```bash
-   ./install-claude.sh
+   node install-claude.js
    ```
 3. Restart Claude Code to load the plugin.
 
 > **Note:** The install script registers a local marketplace and installs the plugin via `claude plugin install`. Simply copying files to `~/.claude/plugins/` is not sufficient — plugins must be registered through the marketplace system to be loaded by Claude Code.
 
+#### Windows
+
+Same steps as Mac / Linux. Run in PowerShell or Command Prompt:
+
+```powershell
+git clone https://github.com/eventsair/conductor.git
+cd conductor
+node build.js
+node install-claude.js
+```
+
+Restart Claude Code to load the plugin.
+
+---
+
 ### Augment Code
 
-1. Build the Augment Code commands:
+#### Mac / Linux
+
+1. Build:
    ```bash
    git clone https://github.com/eventsair/conductor.git
    cd conductor
-   ./build.sh
+   node build.js
    ```
-2. Copy the output into your project:
+2. Install into your project:
    ```bash
-   cp -r dist/augment/.augment /path/to/your/project/
-   cp dist/augment/CLAUDE.md /path/to/your/project/
-   cp -r dist/augment/templates /path/to/your/project/.augment/
+   node install-augment.js /path/to/your/project
    ```
+
+#### Windows
+
+```powershell
+git clone https://github.com/eventsair/conductor.git
+cd conductor
+node build.js
+node install-augment.js C:\path\to\your\project
+```
 
 ## Usage
 
