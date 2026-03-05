@@ -16,7 +16,7 @@ The philosophy behind Conductor is simple: control your code. By treating contex
 | **Claude Code** | Supported | `/conductor:setup`, `/conductor:newTrack` |
 | **Augment Code** | Supported | `/conductor:setup`, `/conductor:newTrack` |
 
-All three platforms share the same core protocols and prompts — only the thin format wrapper differs. A single `build.sh` script generates platform-specific packages from canonical source files.
+All three platforms share the same core protocols and prompts — only the thin format wrapper differs. A single `build.js` script generates platform-specific packages from canonical source files.
 
 ## Features
 
@@ -210,8 +210,9 @@ conductor/
 │   ├── gemini/
 │   ├── claude/
 │   └── augment/
-├── build.sh              # Generates dist/ for all platforms
-├── install-claude.sh     # Registers and installs the Claude Code plugin
+├── build.js              # Generates dist/ for all platforms (cross-platform)
+├── install-claude.js     # Registers and installs the Claude Code plugin
+├── install-augment.js    # Copies Augment Code commands into a target project
 └── dist/                 # Generated platform-specific packages (gitignored)
     ├── gemini/
     ├── claude/
@@ -221,7 +222,7 @@ conductor/
 ### Building from Source
 
 ```bash
-./build.sh
+node build.js
 ```
 
 This generates platform-ready packages in `dist/` by:
